@@ -29,11 +29,12 @@ fn main() {
     while let Some(e) = window.next() {
         window.draw_2d(&e, |c: Context, g, _| {
             clear([1.0; 4], g);
-            let nextrender = game.get_next_render();
-            if let libdragger::RenderType::Sprite(tex) = &nextrender.render_type {
-                let tex = assets.get(&tex).unwrap();
-                let trans = c.transform.trans(nextrender.x, nextrender.y).scale(SCALE_X, SCALE_Y);
-                image(tex, trans, g);
+            for r in game.get_renders() {
+                if let libdragger::RenderType::Sprite(tex) = &r.render_type {
+                    let tex = assets.get(&tex).unwrap();
+                    let trans = c.transform.trans(r.x, r.y).scale(SCALE_X, SCALE_Y);
+                    image(tex, trans, g);
+                }
             }
         });
         if let Some(button) = e.press_args() {

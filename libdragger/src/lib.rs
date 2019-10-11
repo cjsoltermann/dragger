@@ -48,12 +48,20 @@ pub struct Game {
 impl Game {
     pub fn new() -> Game {
         Game {
-            sprites: vec![Sprite {
-                x: 0.0,
-                y: 0.0,
-                z: 0.0,
-                render_type: RenderType::Sprite("planks.png".to_owned())
-            }],
+            sprites: vec![
+                Sprite {
+                    x: 0.0,
+                    y: 0.0,
+                    z: 0.0,
+                    render_type: RenderType::Sprite("planks.png".to_owned())
+                },
+                Sprite {
+                    x: 0.0,
+                    y: 0.0,
+                    z: 0.0,
+                    render_type: RenderType::Sprite("cow.png".to_owned())
+                }
+            ],
         }
     }
 
@@ -65,7 +73,7 @@ impl Game {
         }
     }
 
-    pub fn get_next_render(&self) -> &Sprite {
-        self.sprites.get(0).unwrap()
+    pub fn get_renders(&self) -> &Vec<Sprite> {
+        &self.sprites
     }
 }
