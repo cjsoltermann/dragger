@@ -17,6 +17,13 @@ pub struct Position {
     pub z: f64,
 }
 
+pub struct Sprite {
+    pub x: f64,
+    pub y: f64,
+    pub z: f64,
+    pub render_type: RenderType
+}
+
 pub struct MouseState {
     pub down: bool,
     pub x: f64,
@@ -30,21 +37,22 @@ impl MouseState {
 }
 
 pub enum RenderType {
-    Sprite(String, Position),
-    Text(String, Position),
+    Sprite(String),
+    Text(String),
 }
 
 pub struct Game {
-    sprites: Vec<Position>,
+    sprites: Vec<Sprite>,
 }
 
 impl Game {
     pub fn new() -> Game {
         Game {
-            sprites: vec![Position {
+            sprites: vec![Sprite {
                 x: 0.0,
                 y: 0.0,
                 z: 0.0,
+                render_type: RenderType::Sprite("planks.png".to_owned())
             }],
         }
     }
@@ -57,7 +65,7 @@ impl Game {
         }
     }
 
-    pub fn get_next_render(&self) -> RenderType {
-        RenderType::Sprite("planks.png".to_string(), self.sprites[0])
+    pub fn get_next_render(&self) -> &Sprite {
+        self.sprites.get(0).unwrap()
     }
 }

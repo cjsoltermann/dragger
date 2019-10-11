@@ -30,9 +30,9 @@ fn main() {
         window.draw_2d(&e, |c: Context, g, _| {
             clear([1.0; 4], g);
             let nextrender = game.get_next_render();
-            if let libdragger::RenderType::Sprite(tex, info) = nextrender {
+            if let libdragger::RenderType::Sprite(tex) = &nextrender.render_type {
                 let tex = assets.get(&tex).unwrap();
-                let trans = c.transform.trans(info.x, info.y).scale(SCALE_X, SCALE_Y);
+                let trans = c.transform.trans(nextrender.x, nextrender.y).scale(SCALE_X, SCALE_Y);
                 image(tex, trans, g);
             }
         });
