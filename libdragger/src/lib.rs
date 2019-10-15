@@ -24,6 +24,7 @@ pub struct Sprite {
     pub render_type: RenderType
 }
 
+#[derive(Debug, Copy, Clone)]
 pub struct MouseState {
     pub down: bool,
     pub x: f64,
@@ -43,6 +44,7 @@ pub enum RenderType {
 
 pub struct Game {
     sprites: Vec<Sprite>,
+    last_mouse_state: MouseState
 }
 
 impl Game {
@@ -62,15 +64,16 @@ impl Game {
                     render_type: RenderType::Sprite("cow.png".to_owned())
                 }
             ],
+            last_mouse_state: MouseState::new(false, 0.0, 0.0)
         }
     }
 
-    pub fn update(&mut self, mouse_state: &MouseState) {
-        if mouse_state.down {
-            let sprite = self.sprites.get_mut(0).unwrap();
-            sprite.x = mouse_state.x;
-            sprite.y = mouse_state.y;
+    pub fn update(&mut self, mouse_state: MouseState) {
+        if self.last_mouse_state.down {
+            self.sprites[0].x = mouse_state.x;
+            self.sprites[0].y = mouse_state.y;
         }
+        self.last_mouse_state = mouse_state;
     }
 
     pub fn get_renders(&self) -> &Vec<Sprite> {

@@ -52,7 +52,7 @@ fn main() {
             mouse_state.y = pos[1];
         });
         if let Some(_) = e.update_args() {
-            game.update(&mouse_state);
+            game.update(mouse_state);
         }
     }
 }
