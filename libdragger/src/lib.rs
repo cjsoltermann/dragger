@@ -10,13 +10,6 @@ pub fn test() {
     println!("test");
 }
 
-#[derive(Debug, Copy, Clone)]
-pub struct Position {
-    pub x: f64,
-    pub y: f64,
-    pub z: f64,
-}
-
 pub struct Sprite {
     pub x: f64,
     pub y: f64,
@@ -69,7 +62,7 @@ impl Game {
     }
 
     pub fn update(&mut self, mouse_state: MouseState) {
-        if self.last_mouse_state.down {
+        if !self.last_mouse_state.down && mouse_state.down {
             self.sprites[0].x = mouse_state.x;
             self.sprites[0].y = mouse_state.y;
         }
