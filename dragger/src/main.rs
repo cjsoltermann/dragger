@@ -24,7 +24,7 @@ fn main() {
 
     let mut mouse_state = MouseState::new(false, 0.0, 0.0);
 
-    let mut game = libdragger::Game::new();
+    let mut game = libdragger::Game::create();
 
     while let Some(e) = window.next() {
         window.draw_2d(&e, |c: Context, g, _| {
