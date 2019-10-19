@@ -63,13 +63,28 @@ impl Game {
 
     pub fn update(&mut self, mouse_state: MouseState) {
         if !self.last_mouse_state.down && mouse_state.down {
-            self.sprites[0].x = mouse_state.x;
-            self.sprites[0].y = mouse_state.y;
+            if let Some(id) = self.hit(mouse_state.x, mouse_state.y) {
+                let sprite = self.sprites.get_mut(id).unwrap();
+                sprite.x += 1.0;
+                sprite.y += 1.0;
+            }
         }
         self.last_mouse_state = mouse_state;
     }
 
     pub fn get_renders(&self) -> &Vec<Sprite> {
         &self.sprites
+    }
+
+    fn hit(&self, x: f64, y: f64) -> Option<usize> {
+        let mut top_y = 0.0;
+        let mut top_id = None;
+        for (i, sprite) in self.sprites.iter().enumerate() {
+            if ((sprite.x - x).powi(2) + (sprite.y - y).powi(2)).sqrt() < 50.0 && sprite.y >= top_y{
+                top_id = Some(i);
+                top_y = sprite.y;
+            }
+        }
+        top_id
     }
 }
