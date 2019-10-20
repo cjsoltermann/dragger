@@ -54,7 +54,8 @@ pub enum RenderType {
 pub struct Game {
     sprites: Vec<Sprite>,
     sprite_indices: HashMap<Uuid, usize>,
-    last_mouse_state: MouseState
+    last_mouse_state: MouseState,
+    mouse_sprite: Option<Uuid>,
 }
 
 impl Game {
@@ -68,7 +69,8 @@ impl Game {
         Game {
             sprites: Vec::new(),
             sprite_indices: HashMap::new(),
-            last_mouse_state: MouseState::new(false, 0.0, 0.0)
+            last_mouse_state: MouseState::new(false, 0.0, 0.0),
+            mouse_sprite: None,
         }
     }
 
@@ -97,11 +99,19 @@ impl Game {
     }
 
     pub fn update(&mut self, mouse_state: MouseState) {
-        if !self.last_mouse_state.down && mouse_state.down {
+        if !self.last_mouse_state.down && mouse_state.down { //On mouse down
             if let Some(id) = self.hit(mouse_state.x, mouse_state.y) {
+                self.mouse_sprite = Some(id.clone());
+            }
+        }
+        else if self.last_mouse_state.down && !mouse_state.down { //On mouse up
+            self.mouse_sprite = None;
+        }
+        else if mouse_state.down { //On drag
+            if let Some(id) = self.mouse_sprite {
                 let sprite = self.get_sprite_mut(id).unwrap();
-                sprite.x += 1.0;
-                sprite.y += 1.0;
+                sprite.x = mouse_state.x;
+                sprite.y = mouse_state.y;
             }
         }
         self.last_mouse_state = mouse_state;
