@@ -99,6 +99,11 @@ impl Game {
     }
 
     pub fn update(&mut self, mouse_state: MouseState) {
+        self.drag(mouse_state);
+        self.last_mouse_state = mouse_state;
+    }
+
+    fn drag(&mut self, mouse_state: MouseState) {
         if !self.last_mouse_state.down && mouse_state.down { //On mouse down
             if let Some(id) = self.hit(mouse_state.x, mouse_state.y) {
                 self.mouse_sprite = Some(id.clone());
@@ -114,7 +119,6 @@ impl Game {
                 sprite.y = mouse_state.y;
             }
         }
-        self.last_mouse_state = mouse_state;
     }
 
     pub fn get_renders(&self) -> &Vec<Sprite> {
