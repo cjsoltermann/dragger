@@ -160,12 +160,12 @@ impl Game {
     }
 
     fn hit(&self, x: f64, y: f64) -> Option<Uuid> {
-        let mut top_y = 0.0;
+        let mut top_z = 0.0;
         let mut top_id = None;
         for sprite in &self.sprites {
-            if ((sprite.get_center_x() - x).powi(2) + (sprite.get_center_y() - y).powi(2)).sqrt() < 50.0 && sprite.y >= top_y{
+            if ((sprite.get_center_x() - x).powi(2) + (sprite.get_center_y() - y).powi(2)).sqrt() < 50.0 && sprite.z >= top_z{
                 top_id = Some(sprite.id());
-                top_y = sprite.y;
+                top_z = sprite.z;
             }
         }
         top_id
