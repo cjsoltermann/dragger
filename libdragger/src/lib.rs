@@ -19,17 +19,52 @@ pub struct Sprite {
     pub x: f64,
     pub y: f64,
     pub z: f64,
+
+    pub width: f64,
+    pub height: f64,
+
     pub render_type: RenderType
 }
 
 impl Sprite {
-    pub fn from_texture(path: &str) -> Sprite {
-        Sprite { id: Uuid::new_v4(), x: 0.0, y: 0.0, z: 0.0, render_type: RenderType::Sprite(path.to_owned())}
+    pub fn from_texture(path: &str, width: f64 , height: f64 ) -> Sprite {
+        Sprite { id: Uuid::new_v4(), x: 0.0, y: 0.0, z: 0.0, width, height, render_type: RenderType::Sprite(path.to_owned())}
     }
 
     #[inline(always)]
     pub fn id(&self) -> Uuid {
         self.id.clone()
+    }
+
+    #[inline(always)]
+    pub fn get_center_x(&self) -> f64 {
+        self.x + self.width / 2.0
+    }
+
+    #[inline(always)]
+    pub fn get_center_y(&self) -> f64 {
+        self.y + self.height / 2.0
+    }
+
+    #[inline(always)]
+    pub fn get_center(&self) -> (f64, f64) {
+        (self.get_center_x(), self.get_center_y())
+    }
+
+    #[inline(always)]
+    pub fn set_center_x(&mut self, x: f64 ) {
+        self.x = x - self.width / 2.0;     
+    }
+
+    #[inline(always)]
+    pub fn set_center_y(&mut self, y: f64) {
+        self.y = y - self.height / 2.0;
+    }
+
+    #[inline(always)]
+    pub fn set_center(&mut self, x: f64, y: f64) {
+        self.set_center_x(x);
+        self.set_center_y(y);
     }
 }
 
@@ -61,8 +96,8 @@ pub struct Game {
 impl Game {
     pub fn create() -> Game {
         let mut game = Game::new();
-        game.add_sprite(Sprite::from_texture("plank.png"));
-        game.add_sprite(Sprite::from_texture("cow.png"));
+        game.add_sprite(Sprite::from_texture("plank.png", 64.0 / 2.0, 64.0 / 2.0));
+        game.add_sprite(Sprite::from_texture("cow.png", 128.0 / 2.0, 128.0 / 2.0));
         game
     }
     fn new() -> Game {
@@ -115,8 +150,7 @@ impl Game {
         else if mouse_state.down { //On drag
             if let Some(id) = self.mouse_sprite {
                 let sprite = self.get_sprite_mut(id).unwrap();
-                sprite.x = mouse_state.x;
-                sprite.y = mouse_state.y;
+                sprite.set_center(mouse_state.x, mouse_state.y)
             }
         }
     }
@@ -129,7 +163,7 @@ impl Game {
         let mut top_y = 0.0;
         let mut top_id = None;
         for sprite in &self.sprites {
-            if ((sprite.x - x).powi(2) + (sprite.y - y).powi(2)).sqrt() < 50.0 && sprite.y >= top_y{
+            if ((sprite.get_center_x() - x).powi(2) + (sprite.get_center_y() - y).powi(2)).sqrt() < 50.0 && sprite.y >= top_y{
                 top_id = Some(sprite.id());
                 top_y = sprite.y;
             }
