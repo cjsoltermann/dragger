@@ -1,5 +1,7 @@
 use uuid::Uuid;
 
+use crate::Game;
+
 pub enum RenderType {
     Sprite(String),
     Text(String),
@@ -15,12 +17,14 @@ pub struct Sprite {
     pub width: f64,
     pub height: f64,
 
+    pub hit_action: Option<fn(&mut Game, Uuid) -> ()>,
+
     pub render_type: RenderType
 }
 
 impl Sprite {
     pub fn from_texture(path: &str, width: f64 , height: f64 ) -> Sprite {
-        Sprite { id: Uuid::new_v4(), x: 0.0, y: 0.0, z: 0.0, width, height, render_type: RenderType::Sprite(path.to_owned())}
+        Sprite { id: Uuid::new_v4(), x: 0.0, y: 0.0, z: 0.0, width, height, hit_action: Some(|game, id| game.mouse_sprite = Some(id)), render_type: RenderType::Sprite(path.to_owned())}
     }
 
     #[inline(always)]

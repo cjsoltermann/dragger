@@ -78,14 +78,16 @@ impl Game {
     }
 
     pub fn update(&mut self, mouse_state: MouseState) {
-        self.drag(mouse_state);
+        self.handle_mouse(mouse_state);
         self.last_mouse_state = mouse_state;
     }
 
-    fn drag(&mut self, mouse_state: MouseState) {
+    fn handle_mouse(&mut self, mouse_state: MouseState) {
         if !self.last_mouse_state.down && mouse_state.down { //On mouse down
             if let Some(id) = self.hit(mouse_state.x, mouse_state.y) {
-                self.mouse_sprite = Some(id.clone());
+                if let Some(action) = self.get_sprite_mut(id).unwrap().hit_action {
+                    action(self, id);
+                }
             }
         }
         else if self.last_mouse_state.down && !mouse_state.down { //On mouse up
