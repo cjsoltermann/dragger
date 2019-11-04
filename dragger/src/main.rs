@@ -27,13 +27,15 @@ fn main() {
     let mut game = libdragger::Game::create();
 
     while let Some(e) = window.next() {
+        let size = window.size();
         window.draw_2d(&e, |c: Context, g, _| {
             clear([1.0; 4], g);
-            for r in game.get_renders() {
+            for r in &mut game {
                 if let libdragger::RenderType::Sprite(tex) = &r.render_type {
                     let tex = assets.get(&tex).unwrap();
-                    let trans = c.transform.trans(r.x, r.y).scale(SCALE_X, SCALE_Y);
-                    image(tex, trans, g);
+                    let image = Image::new().rect([0.0, 0.0, r.width * size.width, r.height * size.height]);
+                    let trans = c.transform.trans(r.x * size.width, r.y * size.height);
+                    image.draw(tex, &Default::default(), trans, g);
                 }
             }
         });
@@ -48,8 +50,8 @@ fn main() {
             }
         }
         e.mouse_cursor(|pos| {
-            mouse_state.x = pos[0];
-            mouse_state.y = pos[1];
+            mouse_state.x = pos[0] / window.size().width;
+            mouse_state.y = pos[1] / window.size().height;
         });
         if let Some(_) = e.update_args() {
             game.update(mouse_state);

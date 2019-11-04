@@ -2,6 +2,14 @@ use uuid::Uuid;
 
 use crate::Game;
 
+pub struct Render {
+    pub x: f64,
+    pub y: f64,
+    pub width: f64,
+    pub height: f64,
+    pub render_type: RenderType,
+}
+
 pub enum RenderType {
     Sprite(String),
     Text(String),
@@ -33,12 +41,12 @@ pub struct Sprite {
 
     pub hit_action: Option<fn(&mut Game, Uuid) -> ()>,
 
-    pub render_type: RenderType
+    pub texture: String,
 }
 
 impl Sprite {
-    pub fn from_texture(path: &str, width: f64 , height: f64 ) -> Sprite {
-        Sprite { id: Uuid::new_v4(), x: 0.0, y: 0.0, z: 0.0, width, height, hit_action: Some(sprite_actions::attach_to_mouse), render_type: RenderType::Sprite(path.to_owned())}
+    pub fn new(path: &str, width: f64 , height: f64 ) -> Sprite {
+        Sprite { id: Uuid::new_v4(), x: 0.0, y: 0.0, z: 0.0, width, height, hit_action: Some(sprite_actions::attach_to_mouse), texture: path.to_owned()}
     }
 
     #[inline(always)]
