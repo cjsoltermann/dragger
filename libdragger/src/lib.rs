@@ -77,9 +77,13 @@ impl Game {
             sprite_indices: HashMap::new(),
             last_mouse_state: MouseState::new(false, 0.0, 0.0),
             mouse_sprite: None,
-            camera: Camera {x: 0.0, y: 0.0, width: 50.0, height: 50.0},
+            camera: Camera {x: 0.0, y: 0.0, width: 50.0, height: 100.0},
             last_render: 0,
         }
+    }
+
+    pub fn set_aspect_ratio(&mut self, ratio: f64) {
+        self.camera.width = self.camera.height * ratio;
     }
 
     pub fn add_sprite(&mut self, sprite: Sprite) -> Uuid {

@@ -25,6 +25,7 @@ fn main() {
     let mut mouse_state = MouseState::new(false, 0.0, 0.0);
 
     let mut game = libdragger::Game::create();
+    game.set_aspect_ratio(1.0);
 
     while let Some(e) = window.next() {
         let size = window.size();
@@ -48,6 +49,9 @@ fn main() {
             if let Button::Mouse(MouseButton::Left) = button {
                 mouse_state.down = false;
             }
+        }
+        if let Some(resize) = e.resize_args() {
+            game.set_aspect_ratio(resize.window_size[0] / resize.window_size[1])
         }
         e.mouse_cursor(|pos| {
             mouse_state.x = pos[0] / window.size().width;
