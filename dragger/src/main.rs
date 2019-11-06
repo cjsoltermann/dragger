@@ -25,7 +25,7 @@ fn main() {
     let mut mouse_state = MouseState::new(false, 0.0, 0.0);
 
     let mut game = libdragger::Game::create();
-    game.set_aspect_ratio(1.0);
+    game.set_aspect_ratio(window.size().width / window.size().height);
 
     while let Some(e) = window.next() {
         let size = window.size();
