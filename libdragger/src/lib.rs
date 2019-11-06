@@ -2,8 +2,10 @@ use uuid::Uuid;
 use std::collections::{HashMap};
 
 mod sprite;
+mod render;
 
 pub use sprite::{*};
+pub use render::{*};
 
 #[cfg(test)]
 mod tests {
@@ -49,18 +51,14 @@ pub struct Game {
     last_mouse_state: MouseState,
     mouse_sprite: Option<Uuid>,
     camera: Camera,
-    last_render: usize,
+    render_system: RenderSystem,
 }
 
 impl Iterator for &mut Game {
     type Item = Render;
 
     fn next(&mut self) -> Option<Self::Item> {
-        if let Some(sprite) = self.sprites.get(self.last_render) {
-            self.last_render += 1;
-            return Some(Render {x: (sprite.x - self.camera.x) / self.camera.width, y: (sprite.y - self.camera.y) / self.camera.height, width: sprite.width / self.camera.width, height: sprite.height / self.camera.height, render_type: RenderType::Sprite(sprite.texture.to_owned())})
-        }
-        None
+        self.render_system.next_render(&self.sprites, &self.camera)
     }
 }
 
@@ -78,7 +76,7 @@ impl Game {
             last_mouse_state: MouseState::new(false, 0.0, 0.0),
             mouse_sprite: None,
             camera: Camera {x: 0.0, y: 0.0, width: 50.0, height: 100.0},
-            last_render: 0,
+            render_system: RenderSystem { current_render: 0},
         }
     }
 
@@ -111,7 +109,7 @@ impl Game {
     }
 
     pub fn update(&mut self, mouse_state: MouseState) {
-        self.last_render = 0;
+        self.render_system.current_render = 0;
         self.handle_mouse(mouse_state);
         self.last_mouse_state = mouse_state;
     }
