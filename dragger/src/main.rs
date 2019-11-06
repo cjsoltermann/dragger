@@ -9,9 +9,6 @@ use piston_window::*;
 
 use libdragger::*;
 
-const SCALE_X: f64 = 0.5;
-const SCALE_Y: f64 = 0.5;
-
 fn main() {
     let opengl = OpenGL::V3_2;
     let mut window: PistonWindow = WindowSettings::new("piston: image", [300, 300])
